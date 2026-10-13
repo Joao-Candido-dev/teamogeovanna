@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Para a Geovanna 💍</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,700&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 30%, #ffe4ec, #f7b8c8);
+      font-family: 'Nunito', sans-serif;
+      color: #6b1230;
+      overflow: hidden;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .anel {
+      font-size: 90px;
+      animation: brilho 2s ease-in-out infinite;
+    }
+
+    @keyframes brilho {
+      0%, 100% { transform: scale(1) rotate(-5deg); }
+      50% { transform: scale(1.1) rotate(5deg); }
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(32px, 7vw, 56px);
+      margin: 20px 0 35px;
+      line-height: 1.15;
+    }
+
+    .botoes {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    button {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 22px;
+      padding: 14px 42px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+    }
+
+    #sim {
+      background: #c2185b;
+      color: white;
+      box-shadow: 0 6px 18px rgba(194, 24, 91, 0.4);
+      transition: transform 0.2s;
+    }
+    #sim:hover { transform: scale(1.08); }
+
+    #nao {
+      background: white;
+      color: #6b1230;
+      transition: left 0.25s, top 0.25s;
+    }
+
+    /* tela final */
+    #final {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #final img {
+      width: min(320px, 80vw);
+      border-radius: 16px;
+      border: 8px solid white;
+      box-shadow: 0 10px 30px rgba(107, 18, 48, 0.35);
+      transform: rotate(-3deg);
+      animation: aparecer 0.8s ease-out;
+    }
+
+    #final h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(40px, 9vw, 64px);
+      margin-top: 20px;
+    }
+
+    @keyframes aparecer {
+      from { opacity: 0; transform: scale(0.5) rotate(-15deg); }
+      to { opacity: 1; transform: scale(1) rotate(-3deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="pedido">
+    <div class="anel">💍</div>
+    <h1>Geovanna, você aceita<br>namorar comigo?</h1>
+    <div class="botoes">
+      <button id="sim">Sim</button>
+      <button id="nao">Não</button>
+    </div>
+  </div>
+
+  <div id="final">
+    <img src="foto.jpeg" alt="Nós dois">
+    <h2>Namorados ❤️</h2>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script>
+    const nao = document.getElementById('nao');
+    const sim = document.getElementById('sim');
+
+    // Joga o botão "Não" para um lugar aleatório da tela
+    function fugir() {
+      const maxX = window.innerWidth - nao.offsetWidth - 10;
+      const maxY = window.innerHeight - nao.offsetHeight - 10;
+      nao.style.position = 'fixed';
+      nao.style.left = Math.random() * maxX + 'px';
+      nao.style.top = Math.random() * maxY + 'px';
+    }
+
+    // Foge quando o cursor chega perto (100px de distância)
+    document.addEventListener('mousemove', (e) => {
+      const r = nao.getBoundingClientRect();
+      const centroX = r.left + r.width / 2;
+      const centroY = r.top + r.height / 2;
+      const distancia = Math.hypot(e.clientX - centroX, e.clientY - centroY);
+      if (distancia < 100) fugir();
+    });
+
+    // No celular: foge quando tenta tocar
+    nao.addEventListener('touchstart', (e) => { e.preventDefault(); fugir(); });
+    nao.addEventListener('click', fugir);
+
+    // Clicou em "Sim": mostra a foto e solta confete
+    sim.addEventListener('click', () => {
+      document.getElementById('pedido').style.display = 'none';
+      nao.style.display = 'none';
+      document.getElementById('final').style.display = 'flex';
+
+      const fim = Date.now() + 4000;
+      (function soltar() {
+        confetti({ particleCount: 6, angle: 60, spread: 70, origin: { x: 0 }, colors: ['#c2185b', '#ff80ab', '#ffffff', '#ffd54f'] });
+        confetti({ particleCount: 6, angle: 120, spread: 70, origin: { x: 1 }, colors: ['#c2185b', '#ff80ab', '#ffffff', '#ffd54f'] });
+        if (Date.now() < fim) requestAnimationFrame(soltar);
+      })();
+      confetti({ particleCount: 200, spread: 120, origin: { y: 0.6 } });
+    });
+  </script>
+</body>
+</html>
